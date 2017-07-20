@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".UpdateActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="overview" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
+
+            <EditText
+                android:id="@+id/updateitem"
+                style="@style/EditorFieldStyle"
+                android:hint="item name"
+                android:inputType="textCapWords" />
+
+            <EditText
+                android:id="@+id/updatesupplier"
+                style="@style/EditorFieldStyle"
+                android:hint="supplier"
+                android:inputType="textCapWords" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container_quantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="Quantity" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:paddingLeft="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button android:id="@+id/reduceQuantity"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="-"
+                    android:background="@color/colorAccent"/>
+
+                <TextView
+                    android:id="@+id/updatequantity"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:paddingTop="15dp"
+                    android:text="Quantity"
+                    android:textAlignment="center" />
+
+                <Button android:id="@+id/increaseQuantity"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="+"
+                    android:background="@color/colorAccent"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="Price" />
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:paddingLeft="4dp">
+
+
+            <EditText
+                android:id="@+id/updateprice"
+                style="@style/EditorFieldStyle"
+                android:hint="Edit Price"
+                android:inputType="number" />
+
+
+            <TextView
+                android:id="@+id/label_price"
+                style="@style/EditorUnitsStyle"
+                android:text="Price" />
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/shipped"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="Shipping Status" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/updateshipped"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:paddingRight="16dp"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+    </LinearLayout>
+    <ImageView android:id="@+id/updateimage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/nocar"/>
+</LinearLayout>

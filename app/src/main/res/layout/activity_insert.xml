@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".InsertActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="Item and Supplier"
+            style="@style/CategoryStyle" />
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edititem"
+                android:hint="Item Name"
+                android:inputType="textCapWords"
+                style="@style/EditorFieldStyle" />
+
+            <EditText
+                android:id="@+id/editsupplier"
+                android:hint="Supplier"
+                android:inputType="textCapWords"
+                style="@style/EditorFieldStyle" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container_quantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="Quantity"
+            style="@style/CategoryStyle" />
+
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp">
+
+            <EditText
+                android:id="@+id/editquantity"
+                android:hint="Quantity"
+                android:inputType="number"
+                style="@style/EditorFieldStyle" />
+
+
+            <TextView
+                android:text="Quantity"
+                style="@style/EditorUnitsStyle"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:text="Price"
+            style="@style/CategoryStyle" />
+
+
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp">
+
+
+            <EditText
+                android:id="@+id/editprice"
+                android:hint="Enter Price"
+                android:inputType="number"
+                style="@style/EditorFieldStyle" />
+
+
+            <TextView
+                android:id="@+id/label_price"
+                android:text="Price"
+                style="@style/EditorUnitsStyle"/>
+
+
+        </RelativeLayout>
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/shipped"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="Shipping Status"
+            style="@style/CategoryStyle" />
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/editshipped"
+                android:layout_height="48dp"
+                android:layout_width="wrap_content"
+                android:paddingRight="16dp"
+                android:spinnerMode="dropdown"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button android:id="@+id/editimage"
+        android:text="Add Image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"/>
+
+    <ImageView android:id="@+id/editimgg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
