@@ -1,5 +1,6 @@
 package sed.inventorytracker;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -8,11 +9,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -25,6 +30,10 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 import sed.inventorytracker.data.InventContract.InventEntry;
 
 /**
@@ -32,8 +41,13 @@ import sed.inventorytracker.data.InventContract.InventEntry;
  */
 
 public class InsertActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
-    // private static int RESULT_LOAD_IMG = 1;
+    private static int RESULT_LOAD_IMG = 1;
     private static final int EXISTING_INVENT_LOADER = 0;
+
+    private Uri mUri;
+    private static final int PICK_IMAGE_REQUEST = 0;
+    private static final int SEND_MAIL_REQUEST = 1;
+    private String imageUri;
     // content uri for item
     private Uri mCurrentItemUri;
     // edit texts for each field
@@ -44,6 +58,8 @@ public class InsertActivity extends AppCompatActivity implements LoaderManager.L
     private Spinner mEditShipped;
     private ImageView mEditImgg;
     private Button mEditImage;
+
+    private static final String LOG_TAG = InsertActivity.class.getSimpleName();
 
     // sets inital value of shipped spinner to false
     private int mShipped = InventEntry.SHIPPED_FALSE;
@@ -81,30 +97,112 @@ public class InsertActivity extends AppCompatActivity implements LoaderManager.L
         mEditQuantity  = (EditText) findViewById(R.id.editquantity);
         mEditShipped = (Spinner) findViewById(R.id.editshipped);
 
+
         // sets ontouch listeners to see whether fields have been edited or not
         mEditItem.setOnTouchListener(mTouchListener);
         mEditSupplier.setOnTouchListener(mTouchListener);
         mEditPrice.setOnTouchListener(mTouchListener);
         mEditQuantity.setOnTouchListener(mTouchListener);
         mEditShipped.setOnTouchListener(mTouchListener);
-      //  mEditImage.setOnTouchListener(mTouchListener);
 
-        setupSpinner();
-
-      /*********
-       * mEditImage.setOnClickListener(new View.OnClickListener(){
-       *
+        mEditImage = (Button) findViewById(R.id.editimage);
+        mEditImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create intent to Open Image applications like Gallery, Google Photos
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                // Start the Intent
-                startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
-
+                openImageSelector();
             }
         });
-       *******/
+
+        setupSpinner();
+    }
+
+    public void openImageSelector() {
+        Intent intent;
+
+        if (Build.VERSION.SDK_INT < 19) {
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+        } else {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        }
+
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        // The ACTION_OPEN_DOCUMENT intent was sent with the request code READ_REQUEST_CODE.
+        // If the request code seen here doesn't match, it's the response to some other intent,
+        // and the below code shouldn't run at all.
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.  Pull that uri using "resultData.getData()"
+
+            if (resultData != null) {
+                mUri = resultData.getData();
+                Log.i(LOG_TAG, "Uri: " + mUri.toString());
+
+                imageUri = mUri.toString();
+
+                mEditImgg = (ImageView) findViewById(R.id.editimgg);
+                mEditImgg.setImageBitmap(getBitmapFromUri(mUri));
+            }
+        } else if (requestCode == SEND_MAIL_REQUEST && resultCode == Activity.RESULT_OK) {
+
+        }
+    }
+
+    public Bitmap getBitmapFromUri(Uri uri) {
+
+        if (uri == null || uri.toString().isEmpty())
+            return null;
+
+        // Get the dimensions of the View
+        // int targetW = mEditImgg.getWidth();
+        // int targetH = mEditImgg.getHeight();
+
+        InputStream input = null;
+        try {
+            input = this.getContentResolver().openInputStream(uri);
+
+            // Get the dimensions of the bitmap
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(input, null, bmOptions);
+            input.close();
+
+            int photoW = bmOptions.outWidth;
+            int photoH = bmOptions.outHeight;
+
+            // Determine how much to scale down the image
+            // int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+            // Decode the image file into a Bitmap sized to fill the View
+            bmOptions.inJustDecodeBounds = false;
+            // bmOptions.inSampleSize = scaleFactor;
+            bmOptions.inPurgeable = true;
+
+            input = this.getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(input, null, bmOptions);
+            input.close();
+            return bitmap;
+
+        } catch (FileNotFoundException fne) {
+            Log.e(LOG_TAG, "Failed to load image.", fne);
+            return null;
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Failed to load image.", e);
+            return null;
+        } finally {
+            try {
+                input.close();
+            } catch (IOException ioe) {
+
+            }
+        }
     }
 
     private void setupSpinner() {
@@ -174,6 +272,9 @@ public class InsertActivity extends AppCompatActivity implements LoaderManager.L
             Integer.parseInt(quantityEntry);
         }
         values.put(InventEntry.COLUMN_QUANTITY,quantity);
+
+        // Adds image to files
+        values.put(InventEntry.COLUMN_IMAGE, imageUri);
 
         if (mCurrentItemUri == null) {
             Uri newUri = getContentResolver().insert(InventEntry.CONTENT_URI, values);
@@ -288,7 +389,8 @@ public class InsertActivity extends AppCompatActivity implements LoaderManager.L
                 InventEntry.COLUMN_PRICE,
                 InventEntry.COLUMN_SUPPLIER,
                 InventEntry.COLUMN_QUANTITY,
-                InventEntry.COLUMN_SHIPPED };
+                InventEntry.COLUMN_SHIPPED,
+                InventEntry.COLUMN_IMAGE};
 
         // execute query method in background thread
         return new CursorLoader(this,   // Parent activity context
@@ -311,6 +413,7 @@ public class InsertActivity extends AppCompatActivity implements LoaderManager.L
             int priceColumnIndex = cursor.getColumnIndex(InventEntry.COLUMN_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(InventEntry.COLUMN_QUANTITY);
             int shippedColumnIndex = cursor.getColumnIndex(InventEntry.COLUMN_SHIPPED);
+            int imageColumnIndex = cursor.getColumnIndex(InventEntry.COLUMN_IMAGE);
 
         // gets data from cursor
             String name = cursor.getString(nameColumnIndex);
@@ -318,11 +421,13 @@ public class InsertActivity extends AppCompatActivity implements LoaderManager.L
             int quantity = cursor.getInt(quantityColumnIndex);
             int price = cursor.getInt(priceColumnIndex);
             int shipped = cursor.getInt(shippedColumnIndex);
+            String image = cursor.getString(imageColumnIndex);
 
             mEditItem.setText(name);
             mEditSupplier.setText(supplier);
             mEditPrice.setText(Integer.toString(price));
             mEditQuantity.setText(Integer.toString(quantity));
+            mEditImgg.setImageBitmap(getBitmapFromUri(mUri));
 
             switch (shipped) {
                 case InventEntry.SHIPPED_PROCESSING:

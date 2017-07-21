@@ -104,10 +104,10 @@ public class InventProvider  extends ContentProvider {
         if (shipped != null && !InventEntry.isValidShipped(shipped) ) {
             throw  new IllegalArgumentException("requires valid ship status");
         }
-        /* String image = contentValues.getAsString(InventEntry.COLUMN_IMAGE);
+        String image = contentValues.getAsString(InventEntry.COLUMN_IMAGE);
         if (image == null ) {
             throw new IllegalArgumentException("Requires image");
-        } */
+        }
 
         // enables writing to database
         SQLiteDatabase database = mDBHelper.getWritableDatabase();
@@ -169,13 +169,13 @@ public class InventProvider  extends ContentProvider {
                     throw new IllegalArgumentException("item requires quantity");
                 }
             }
-            /*    if (values.containsKey(InventEntry.COLUMN_IMAGE)) {
+        if (values.containsKey(InventEntry.COLUMN_IMAGE)) {
                     // Check that the weight is greater than or equal to 0 kg
                     String image = values.getAsString(InventEntry.COLUMN_IMAGE);
                     if (image != null ) {
                         throw new IllegalArgumentException("item requires image");
                     }
-            } */
+        }
             // If there are no values to update, then don't try to update the database
             if (values.size() == 0) {
                 return 0;

@@ -46,7 +46,7 @@ public final class InventContract {
         public static final String COLUMN_PRICE = "price";
         public static final String COLUMN_SHIPPED = "shipped";
         public static final String COLUMN_SUPPLIER = "supplier";
-      //  public static final String COLUMN_IMAGE = "image";
+        public static final String COLUMN_IMAGE = "image";
         // Different shipping status'
         public static final int SHIPPED_TRUE = 2;
         public static final int SHIPPED_FALSE = 0;

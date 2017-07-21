@@ -111,7 +111,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 InventEntry._ID,
                 InventEntry.COLUMN_ITEM_NAME,
                 InventEntry.COLUMN_QUANTITY,
-                InventEntry.COLUMN_PRICE};
+                InventEntry.COLUMN_PRICE,
+                InventEntry.COLUMN_SUPPLIER,
+                InventEntry.COLUMN_SHIPPED};
 
         return new CursorLoader(this,
                 InventEntry.CONTENT_URI,
@@ -125,25 +127,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (data == null) {
             return;
         }
-        if ((data.moveToFirst())) {
-            int quantityColumnIndex = data.getColumnIndex(InventEntry.COLUMN_QUANTITY);
-
-            // gets data from cursor
-            final int quantity = data.getInt(quantityColumnIndex);
-
-            View inflatedView = getLayoutInflater().inflate(R.layout.list_item, null);
-            Button salebuton = (Button) inflatedView.findViewById(R.id.sale);
-            salebuton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    productSold(mCurrentItemUri, (quantity - 1));
-                }
-            });
 
             // updates cursor adapter with new cursor data
             mCursorAdapter.swapCursor(data);
-        }
     }
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -151,11 +139,5 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    private int productSold(Uri uri, int mQuantity){
-        ContentValues values = new ContentValues();
-        values.put(InventEntry.COLUMN_QUANTITY, mQuantity);
-        int numRowsUpdated = getContentResolver().update(uri, values, null, null);
-        return numRowsUpdated;
-    }
 }
 

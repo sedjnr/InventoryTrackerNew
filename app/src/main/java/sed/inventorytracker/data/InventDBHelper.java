@@ -31,9 +31,8 @@ public class InventDBHelper extends SQLiteOpenHelper {
                 + InventEntry.COLUMN_SUPPLIER + " TEXT, "
                 + InventEntry.COLUMN_SHIPPED + " INTEGER NOT NULL, "
                 + InventEntry.COLUMN_PRICE + " INTEGER NOT NULL, "
-                + InventEntry.COLUMN_QUANTITY + " INTEGER NOT NULL DEFAULT 0"
-               // + InventEntry.COLUMN_IMAGE + "TEXT" +
-                + ");";
+                + InventEntry.COLUMN_QUANTITY + " INTEGER NOT NULL DEFAULT 0, "
+                + InventEntry.COLUMN_IMAGE + " TEXT);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_ITEM_TABLE);
